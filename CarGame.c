@@ -52,11 +52,11 @@ void road()
 	printf("-PRESS S TO MOVE THE CAR DOWN");
 	gotoxy(40,7);
 	printf("-PRESS D TO MOVE THE CAR RIGHT");
-	line(10,10,10,600); //right boundary of the road
+	line(10,10,10,600);    //right boundary of the road
 	line(200,10,200,600); //left boundary of the road
 	setcolor(6);
 	car();
-	if(tc==500) //traffic car control
+	if(tc==500) 
 	{
 	    tc=0;
 	    tc2 =random(150);
@@ -69,7 +69,7 @@ void road()
 	r = r+8;
 	d = d+8;
 	line(105,300+d,105,400+d); //middle road
-	if(r==400) // As max Y coordinate = 500
+	if(r==400) //  Max Y coordinate = 500
 	    r =0;
 	if(d==200)
 	    d=-200;
@@ -158,7 +158,7 @@ void scoreboard()
     printf("SCORE: %d\n",count);
     setcolor(13);
     settextstyle(3,0,2);
-    outtextxy(62,260,"Press Spacebar to play again and 'esc' to exit:\n");
+    outtextxy(62,260,"Press Spacebar to play again and 'e' to exit:\n");
     char choice;
     choice = getch();
     switch(tolower(choice))
@@ -180,5 +180,5 @@ void scoreboard()
 void crash(int x1, int y1)
 {
      if ( (x1+20 >=100+c2) && (x1<= 130+c2) && (y1+60>=150-c1)  && (y1<=190-c1))
-	 scoreboard(); //ADD THE SCOREBOARD FUNCTION HERE INSTEAD OF exit(0);
+	 scoreboard(); 
 }
