@@ -1,312 +1,184 @@
-#include<stdio.h>
-#include<conio.h>
-#include<graphics.h>
-#include<dos.h>
+#include <conio.h>
+#include <stdio.h>
+#include <graphics.h>
+#include <dos.h>
+#include <ctype.h>
+#include <stdlib.h>
 
-int cor1[400][2]; //coordinates
-int cor2[400][2]; //coordinates
-int x1=156,y1=340,x2=349,y2=340; //interface dimension
-long int score=0;
+static int c1;
+static int c2;
+static int r;
+static const int i =0;
+static int d;
+static int count;
+static int tc;
+static int tc2;
 
-void load(); //loading screen
-void boarder(); //border design
-void over(long int); //game over screen
-void onecarlayout(int,int); //1st Car layout
-void twocarlayout(int,int); //2nd Car Layout
-void printscore(long int); //Score
-void obj1(int,int); //1st Object Layout
-void obj2(int ,int); //2nd Object Layout
-void objclr(int,int); //Reconfig Object Layout
-void carclr(int,int); //Reconfig Car Layout
-char esc();
-
-void main(){
-
-    int gd=DETECT;
-    int gm,h=1,i,j,z,m,d;
-    long int c=1;char q;
-    float n=40;
-    initgraph(&gd,&gm,"..\\bgi"); // Borland Location Setup
-    load();
-    boarder();
-    for(i=0;i<10;i++)
-    {
-        cor1[i][0]=0;
-        cor2[i][0]=0;
-    }
-    i=i-1;
-    m=i;
-    while(1){ //Continuous flowing of objects
-
-        h++;
-        label2:
-        if(c%20==0) //for first object system
-	    {
-		    i=i+1;
-		    z=rand()%16;
-		    if(z%3==0)
-		    {
-			    cor1[i][0]=156;
-			    cor1[i][1]=25;
-		    }
-		    else
-		    {
-			    cor1[i][0]=251;
-			    cor1[i][1]=25;
-		    }
-	    }
-        for(j=i-8;j<=i;j++)
-	    {
-		    if(cor1[j][0]!=0)
-		    {
-			    if(cor1[j][0]==x1&&cor1[j][1]>y1&&y1+40>=cor1[j][1]) //Crash to the object
-			        goto label;
-			    if(cor1[j][1]>25)
-				    objclr(cor1[j][0],cor1[j][1]-5); //Reconfig after object reach end cordinate
-			    if(cor1[j][1]+20>=418)
-			    {
-				    score++;
-				    objclr(cor1[j][0],cor1[j][1]-5);
-				    cor1[j][0]=0;
-				    continue;
-			    }
-			    obj1(cor1[j][0],cor1[j][1]);
-			    cor1[j][1]=cor1[j][1]+5;
-		    }
-	    }
-        if(c%20==0) //for second object system
-	    {
-		    m=m+1;
-		    z=rand()%16;
-		    if(z%3==0)
-		    {
-			    cor2[m][0]=444;
-			    cor2[m][1]=25;
-		    }
-		    else
-		    {
-			    cor2[m][0]=349;
-			    cor2[m][1]=25;
-		    }
-	    }
-        for(j=m-8;j<=m;j++)
-	    {
-		    if(cor2[j][0]!=0)
-		    {
-			    if(cor2[j][0]==x2&&cor2[j][1]>y2&&y2+40>=cor2[j][1])
-				    goto label;
-			    if(cor2[j][1]>25)
-				    objclr(cor2[j][0],cor2[j][1]-5);
-			    if(cor2[j][1]+25>=418)
-			    {
-				    score++;
-				    objclr(cor2[j][0],cor2[j][1]-5);
-				    cor2[j][0]=0;
-				    continue;
-			    }
-			    obj2(cor2[j][0],cor2[j][1]);
-			    cor2[j][1]=cor2[j][1]+5;
-		    }
-	    }
-        nosound();
-        if(kbhit()!=0) //Movement of the Cars as Kbhit determines if key is pressed or not
-	    {
-		    q=getch();
-		    if(q=='a')
-		    {
-			    sound(800);
-			    carclr(x1,y1);
-			    if(x1==156)
-				    x1=251;
-			    else
-				    x1=156;
-		    }
-		    else if(q=='l')
-		    {
-			    sound(2000);
-			    carclr(x2,y2);
-			    if(x2==349)
-				    x2=444;
-			    else
-				    x2=349;
-		    }
-		    else if (q==27)
-		    {
-			    q=esc(); // Esc Funtion load when pressed esc button 
-			    if(q=='y')
-				    exit();
-			    else
-			    {
-				    clearviewport();
-				    setviewport(0,0,639,479,1);
-				    boarder();
-				    goto label2;
-			    }
-		    }
-	    }
-        twocarlayout(x1,y1);
-	    onecarlayout(x2,y2);
-        printscore(score);
-        c++;
-	    n=n-0.01;
-	    d=n;
-	    delay(d);
-    }
-    label: 
-    over(score); //Game over Screen
-    while(1) //Restarting Game
-    {
-	    if(kbhit()!=0)
-	        q=getch();
-	    if(q==27)
-		    exit();
-	    delay(200);
-    }
-}
-
-void load(){
-
-    int i;
-    textcolor(BLACK); //background color
-    moveto(200,180); //loading process
-    outtext("Loading, please wait........");
-    for(i=0;i<600;i+=2)
-    {
-        setcolor(3); //loading bar color
-        line(20,380,i+39,380);
-        delay (10);
-    }
-    setcolor(WHITE);
-    moveto(240,200);
-    outtext("Loading Completed!"); //loading
-    delay(1000);
-    clrscr();
-
-}
-
-void boarder(){
-
-    setcolor(14);
-    rectangle(126,20,513,420);
-    setcolor(2);
-    rectangle(127,21,512,419);
-    setcolor(14);
-    rectangle(128,22,511,418);//small
-    setcolor(14);
-    rectangle(318,23,321,417);//middle
-    setfillstyle(1,2);
-    floodfill(320,100,14); //outer
-    setfillstyle(1,1);
-    floodfill(50,20,14);
-    rectangle(223,23,223,417);//left line
-    rectangle(416,23,416,417);//right line
-
-}
-
-void over(long int a)
+void car();
+void control();
+void road();
+void traffic(int t1,int t2);
+void crash(int,int);
+void initialize();
+void scoreboard();
+void main()
 {
-    char output[20];
-    nosound();
-    setviewport(200,200,420,279,1);
-    setcolor(4);
-    rectangle(0,0,220,79);
-    rectangle(1,1,219,78);
-    rectangle(2,2,218,77);
-    setfillstyle(1,9);
-    floodfill(10,10,4);
-    outtextxy(75,4,"GAME OVER");
-    outtextxy(87,20,"score");
-    sprintf(output,"%Ld",a);
-    outtextxy(100,40,output);
-    outtextxy(45,55,"press esc to exit");
+    int gd = DETECT, gm;
+    initgraph(&gd,&gm,"..\\bgi");
+    initialize();
+    do
+    {
+		control();
+		road();
+    }while(i!=20);
+
+    getch();
+    closegraph();
 }
 
-void twocarlayout(int cx,int cy)
+void road()
 {
-    setviewport(cx,cy,cx+39,cy+40,1);
-    setcolor(14);
-    rectangle(1,0,37,40);
-    setfillstyle(8,1);
-    floodfill(5,4,14);
+    do
+    {
+	gotoxy(40,2);
+	printf("SCORE:%d",count);
+	gotoxy(40,3);
+	printf("-PRESS E TO QUIT THE GAME");
+	gotoxy(40,4);
+	printf("-PRESS W TO MOVE THE CAR UP");
+	gotoxy(40,5);
+	printf("-PRESS A TO MOVE THE CAR LEFT");
+	gotoxy(40,6);
+	printf("-PRESS S TO MOVE THE CAR DOWN");
+	gotoxy(40,7);
+	printf("-PRESS D TO MOVE THE CAR RIGHT");
+	line(10,10,10,600); //right boundary of the road
+	line(200,10,200,600); //left boundary of the road
+	setcolor(6);
+	car();
+	if(tc==500) //traffic car control
+	{
+	    tc=0;
+	    tc2 =random(150);
+	    count += 2;
+	}
+	traffic(tc2+15,10+tc);
+	tc += 10;
+	setcolor(15);
+	line(105,100+r,105,200+r); //middle road
+	r = r+8;
+	d = d+8;
+	line(105,300+d,105,400+d); //middle road
+	if(r==400) // As max Y coordinate = 500
+	    r =0;
+	if(d==200)
+	    d=-200;
+	delay(50);
+	clearviewport();
+    }while(!kbhit());
 }
 
-void onecarlayout(int cx,int cy)
+void traffic(int t1,int t2)
 {
-    setviewport(cx,cy,cx+39,cy+40,1);
+    bar(t1+5,t2,t1+25,t2+60);
+    ellipse(t1-1,t2+7,0,360,1,6);
+    ellipse(t1+32,t2+7,0,360,1,6);
+    ellipse(t1-1,t2+30,0,360,1,6);
+    ellipse(t1+32,t2+30,0,360,1,6);
+    crash(t1+5,t2);
+}
+
+void control()
+{
+    char ch;
+    ch = getch();
+    if(c2==-95)
+	c2 = -90;
+    if(c2==65)
+	c2 = 60;
+    switch(ch)
+    {
+	case 'w':
+	{
+	    c1 = c1+5;
+	    break;
+	}
+	case 's':
+	{
+	    c1 = c1-5;
+	    break;
+	}
+	case 'd':
+	{
+	    c2 = c2+5;
+	    break;
+	}
+	case 'a':
+	{
+	    c2 = c2-5;
+	    break;
+	}
+	case 'E':
+	{
+	    nosound();
+	    exit(0);
+	}
+
+    }
+}
+
+void car()
+{
+    bar(100+c2,150-c1,130+c2,190-c1);
+    ellipse(98+c2,157-c1,0,160,1,6);
+    ellipse(132+c2,157-c1,0,160,1,6);
+    ellipse(98+c2,182-c1,0,160,1,6);
+    ellipse(132+c2,182-c1,0,160,1,6);
+
+}
+
+void initialize()
+{
+    c1=0,c2=0; 
+    r=0,d=0;
+    tc= 0,tc2=0; 
+    count=0; 
+}
+
+void scoreboard()
+{
+    clearviewport();
+    setcolor(1);
+    settextstyle(2,0,100);
+    outtextxy(200,125,"GAME OVER!\n");
+    gotoxy(35,12);
+    settextstyle(2,0,15);
     setcolor(3);
-    rectangle(1,0,37,40);
-    setfillstyle(8,1);
-    floodfill(5,4,3);
-}
-
-void printscore(long int a)
-{
-    char output[40];
-    setviewport(525,180,610,240,1);
-    clearviewport();
-    setviewport(530,185,610,235,1);
-    setfillstyle(1,15);
-    floodfill(2,2,3);
-    setcolor(4);
-    outtextxy(20,4,"score");
-    sprintf(output,"%Ld",a);
-    outtextxy(33,25,output);
-}
-
-void obj1(int cx,int cy)
-{
-    setviewport(cx,cy,cx+39,cy+20,1);
-    setcolor(14);
-    rectangle(0,0,39,20);
-    setfillstyle(8,4);
-    floodfill(10,10,14);
-}
-
-void obj2(int cx,int cy)
-{
-    setviewport(cx,cy,cx+39,cy+20,1);
-    setcolor(3);
-    rectangle(0,0,39,20);
-    setfillstyle(8,4);
-    floodfill(10,10,3);
-}
-
-void objclr(int cx,int cy)
-{
-    setviewport(cx,cy,cx+39,cy+20,1);
-    clearviewport();
-}
-
-void carclr(int cx,int cy)
-{
-    setviewport(cx,cy,cx+39,cy+40,1);
-    clearviewport();
-}
-
-char esc()
-{
-    char c;
-    while(1)
+    //outtextxy(220,50,"SCORE");
+    printf("SCORE: %d\n",count);
+    setcolor(13);
+    settextstyle(3,0,2);
+    outtextxy(62,260,"Press Spacebar to play again and 'esc' to exit:\n");
+    char choice;
+    choice = getch();
+    switch(tolower(choice))
     {
-        setviewport(200,200,420,279,1);
-        setcolor(4);
-        rectangle(0,0,220,79);
-        rectangle(1,1,219,78);
-        rectangle(2,2,218,77);
-        setfillstyle(1,9);
-        floodfill(10,10,4);
-        outtextxy(75,4,"REALLT WANT TO EXIT ?");
-        outtextxy(87,20,"Y      N");
-        if(kbhit()!=0)
-        {
-            c=getch();
-            if(c=='y'||c=='n')
-            {
-                clearviewport();
-                setviewport(201,201,421,280,1);
-                clearviewport();
-                return c;
-            }
-        }
+        case ' ':
+            initialize();
+            main();
+            break;
+        case 'e':
+            exit(0);
+            break;
+        default:
+            exit(0);
+        
     }
+
+}
+
+void crash(int x1, int y1)
+{
+     if ( (x1+20 >=100+c2) && (x1<= 130+c2) && (y1+60>=150-c1)  && (y1<=190-c1))
+	 scoreboard(); //ADD THE SCOREBOARD FUNCTION HERE INSTEAD OF exit(0);
 }
