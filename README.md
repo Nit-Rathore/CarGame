@@ -1,15 +1,16 @@
 # Introduction
-Hey everyone, this is our Computer project in C. 
+Hey everyone, this is my Computer project to extend my knowledge in 'C' for the course UE20CS151 (Introduction to C Programming)
 
 
 # CarGame
-A simple 2d car game in C, which requires to dodge cars using W.A.S.D keys and gives the user an option to play again after the game is over.
-
+A 2D car traffic game, where the obstacles are car, the user dodges them and on collision the game is over.
+The side of roads are also marked and the car cannot go to sides beyond a certain distance. 
 
 # Requirements
 Works on Borland compilers only, we have used Turbo C++ 
 
+#Modifications
+Any modifications or suggestions are welcome
 
-# Team Members
-Nitish Rathore
-Niveditha Kundapuram 
+
+
