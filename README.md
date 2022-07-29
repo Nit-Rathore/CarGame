@@ -9,6 +9,11 @@ The side of roads are also marked and the car cannot go to sides beyond a certai
 # Requirements
 Works on Borland compilers only, we have used Turbo C++ 
 
+
+#Team Members
+Nitish Rathore
+Niveditha Kundapuram 
+
 #Modifications
 Any modifications or suggestions are welcome
 
